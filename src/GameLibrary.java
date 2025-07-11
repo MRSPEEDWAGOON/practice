@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameLibrary {
     private final Map<String, Game> collection = new HashMap<>();
@@ -26,6 +27,11 @@ public class GameLibrary {
 
     public Collection<Game> getAvailableGames() {
         return collection.values();
+    }
+
+
+    public List<Game> searchByGenger(String genre){
+        return collection.values().stream().filter(g -> g.getGenre().equalsIgnoreCase(genre)).collect(Collectors.toList());
     }
 
     public List<Achievement> getPlayerAchievements(String playerId) {
