@@ -30,8 +30,10 @@ public class GameLibrary {
     }
 
 
-    public List<Game> searchByGenger(String genre){
-        return collection.values().stream().filter(g -> g.getGenre().equalsIgnoreCase(genre)).collect(Collectors.toList());
+    public List<Game> searchByGenre(String genre) {
+        return collection.values().stream()
+                .filter(g -> g.getGenre().equalsIgnoreCase(genre))
+                .collect(Collectors.toList());
     }
 
     public List<Achievement> getPlayerAchievements(String playerId) {
