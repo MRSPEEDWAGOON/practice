@@ -1,3 +1,5 @@
+package com.example.gameapp.core;
+
 public class Achievement {
     private final String code;
     private final String description;

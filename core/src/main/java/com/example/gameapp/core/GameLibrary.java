@@ -3,6 +3,7 @@ package com.example.gameapp.core;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class GameLibrary {
     private final Map<String, Game> collection = new HashMap<>();
     private final Map<String, List<Achievement>> achievements = new HashMap<>();
@@ -11,10 +12,12 @@ public class GameLibrary {
     public void addGame(Game game) {
         collection.put(game.getTitle(), game);
     }
+
     public void registerPlayer(Player p) {
         players.put(p.getId(), p);
         achievements.put(p.getId(), new ArrayList<>());
     }
+
     public boolean awardAchievement(String playerId, Achievement ach) {
         List<Achievement> list = achievements.get(playerId);
         if (list != null && players.containsKey(playerId)) {
@@ -23,15 +26,51 @@ public class GameLibrary {
         }
         return false;
     }
+
     public Collection<Game> getAvailableGames() {
-        return collection.values();
+        return Collections.unmodifiableCollection(collection.values());
     }
+
     public List<Achievement> getPlayerAchievements(String playerId) {
         return Collections.unmodifiableList(achievements.getOrDefault(playerId, List.of()));
     }
+
     public List<Game> searchByGenre(String genre) {
         return collection.values().stream()
                 .filter(g -> g.getGenre().equalsIgnoreCase(genre))
                 .collect(Collectors.toList());
+    }
+
+
+    public boolean borrowGame(String playerId, String title) {
+        return borrowBook(playerId, title);
+    }
+
+
+    public boolean returnGame(String playerId, String title) {
+        return returnBook(playerId, title);
+    }
+
+
+
+    private boolean borrowBook(String userId, String title) {
+        Game game = collection.remove(title);
+        if (game != null && players.containsKey(userId)) {
+            achievements.get(userId);
+            returnBookHelper(userId, game);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean returnBook(String userId, String title) {
+        returnBookHelper(userId, collection.get(title));
+        return true;
+    }
+
+
+    private void returnBookHelper(String userId, Game game) {
+
     }
 }
