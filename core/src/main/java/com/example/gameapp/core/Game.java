@@ -1,3 +1,5 @@
+package com.example.gameapp.core;
+
 public class Game {
     private final String title;
     private final String genre;

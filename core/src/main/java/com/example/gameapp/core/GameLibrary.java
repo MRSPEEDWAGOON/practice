@@ -1,11 +1,13 @@
+package com.example.gameapp.core;
+
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 public class GameLibrary {
     private final Map<String, Game> collection = new HashMap<>();
     private final Map<String, List<Achievement>> achievements = new HashMap<>();
     private final Map<String, Player> players = new HashMap<>();
-
 
     public void addGame(Game game) {
         collection.put(game.getTitle(), game);
@@ -26,9 +28,12 @@ public class GameLibrary {
     }
 
     public Collection<Game> getAvailableGames() {
-        return collection.values();
+        return Collections.unmodifiableCollection(collection.values());
     }
 
+    public List<Achievement> getPlayerAchievements(String playerId) {
+        return Collections.unmodifiableList(achievements.getOrDefault(playerId, List.of()));
+    }
 
     public List<Game> searchByGenre(String genre) {
         return collection.values().stream()
@@ -36,7 +41,36 @@ public class GameLibrary {
                 .collect(Collectors.toList());
     }
 
-    public List<Achievement> getPlayerAchievements(String playerId) {
-        return Collections.unmodifiableList(achievements.getOrDefault(playerId, List.of()));
+
+    public boolean borrowGame(String playerId, String title) {
+        return borrowBook(playerId, title);
+    }
+
+
+    public boolean returnGame(String playerId, String title) {
+        return returnBook(playerId, title);
+    }
+
+
+
+    private boolean borrowBook(String userId, String title) {
+        Game game = collection.remove(title);
+        if (game != null && players.containsKey(userId)) {
+            achievements.get(userId);
+            returnBookHelper(userId, game);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean returnBook(String userId, String title) {
+        returnBookHelper(userId, collection.get(title));
+        return true;
+    }
+
+
+    private void returnBookHelper(String userId, Game game) {
+
     }
 }
