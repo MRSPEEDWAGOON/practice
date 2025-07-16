@@ -3,7 +3,6 @@ package com.example.gameapp.core;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class GameLibrary {
     private final Map<String, Game> collection = new HashMap<>();
     private final Map<String, List<Achievement>> achievements = new HashMap<>();
@@ -32,7 +31,8 @@ public class GameLibrary {
     }
 
     public List<Achievement> getPlayerAchievements(String playerId) {
-        return Collections.unmodifiableList(achievements.getOrDefault(playerId, List.of()));
+        return Collections.unmodifiableList(
+                achievements.getOrDefault(playerId, List.of()));
     }
 
     public List<Game> searchByGenre(String genre) {
@@ -41,36 +41,23 @@ public class GameLibrary {
                 .collect(Collectors.toList());
     }
 
-
     public boolean borrowGame(String playerId, String title) {
-        return borrowBook(playerId, title);
-    }
-
-
-    public boolean returnGame(String playerId, String title) {
-        return returnBook(playerId, title);
-    }
-
-
-
-    private boolean borrowBook(String userId, String title) {
-        Game game = collection.remove(title);
-        if (game != null && players.containsKey(userId)) {
-            achievements.get(userId);
-            returnBookHelper(userId, game);
+        Player player = players.get(playerId);
+        Game game = collection.get(title);
+        if (game != null && player != null && player.borrowGame(game)) {
+            collection.remove(title);
             return true;
         }
-
         return false;
     }
 
-    private boolean returnBook(String userId, String title) {
-        returnBookHelper(userId, collection.get(title));
-        return true;
-    }
-
-
-    private void returnBookHelper(String userId, Game game) {
-
+    public boolean returnGame(String playerId, String title) {
+        Player player = players.get(playerId);
+        Game game = collection.get(title);
+        if (game != null && player != null && player.returnGame(game)) {
+            collection.put(title, game);
+            return true;
+        }
+        return false;
     }
 }
